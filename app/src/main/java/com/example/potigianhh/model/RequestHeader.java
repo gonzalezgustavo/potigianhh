@@ -48,8 +48,8 @@ public class RequestHeader {
     private String enabledFlag;
     private String preparerCode;
     private Date preparerDate;
-    private Long purchaseOrderNumber;
-    private Long appRequestNumber;
+    private String purchaseOrderNumber;
+    private String appRequestNumber;
     private Character saleMode;
 
     public Integer getDocumentCode() {
@@ -412,19 +412,19 @@ public class RequestHeader {
         this.preparerDate = preparerDate;
     }
 
-    public Long getPurchaseOrderNumber() {
+    public String getPurchaseOrderNumber() {
         return purchaseOrderNumber;
     }
 
-    public void setPurchaseOrderNumber(Long purchaseOrderNumber) {
+    public void setPurchaseOrderNumber(String purchaseOrderNumber) {
         this.purchaseOrderNumber = purchaseOrderNumber;
     }
 
-    public Long getAppRequestNumber() {
+    public String getAppRequestNumber() {
         return appRequestNumber;
     }
 
-    public void setAppRequestNumber(Long appRequestNumber) {
+    public void setAppRequestNumber(String appRequestNumber) {
         this.appRequestNumber = appRequestNumber;
     }
 
