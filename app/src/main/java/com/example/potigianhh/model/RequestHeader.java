@@ -47,7 +47,7 @@ public class RequestHeader {
     private Long distributionNumber;
     private String enabledFlag;
     private String preparerCode;
-    private Long preparerDate;
+    private Date preparerDate;
     private Long purchaseOrderNumber;
     private Long appRequestNumber;
     private Character saleMode;
@@ -404,11 +404,11 @@ public class RequestHeader {
         this.preparerCode = preparerCode;
     }
 
-    public Long getPreparerDate() {
+    public Date getPreparerDate() {
         return preparerDate;
     }
 
-    public void setPreparerDate(Long preparerDate) {
+    public void setPreparerDate(Date preparerDate) {
         this.preparerDate = preparerDate;
     }
 

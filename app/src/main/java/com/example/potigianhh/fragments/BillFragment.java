@@ -21,7 +21,6 @@ import com.google.common.reflect.TypeToken;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;

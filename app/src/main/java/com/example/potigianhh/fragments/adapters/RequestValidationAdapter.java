@@ -1,8 +1,6 @@
 package com.example.potigianhh.fragments.adapters;
 
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
