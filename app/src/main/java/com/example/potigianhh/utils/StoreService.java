@@ -65,7 +65,7 @@ public class StoreService
                     && gson.fromJson(entry.getValue().toString(), Date.class).before(dateOneMonthAgo))
                 .map(Map.Entry::getKey)
                 .forEach(key -> {
-                    if (!Constants.API_KEY.equals(key)) {
+                    if (!Constants.API_KEY.equals(key) && !Constants.PRINTER_KEY.equals(key)) {
                         prefsEditor.remove(key);
                         prefsEditor.remove(key.replace(Constants.DATE_SUFFIX, ""));
                     }

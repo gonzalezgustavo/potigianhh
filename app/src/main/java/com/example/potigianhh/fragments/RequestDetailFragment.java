@@ -93,7 +93,7 @@ public class RequestDetailFragment extends BaseFragment {
                     String currentValue = adapter.getValueAt(i);
                     if ("".equals(currentValue))
                         currentValue = "0";
-                    String newValue = Integer.toString(Integer.parseInt(currentValue) + 1);
+                    String newValue = Integer.toString(Integer.parseInt(currentValue) + (int) request.getSaleFactor());
                     adapter.setValueAt(i, newValue);
 
                     RequestDetailsAdapter.ViewHolder holder =

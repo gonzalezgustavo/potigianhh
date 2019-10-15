@@ -49,6 +49,7 @@ public class RequestDetails {
     private String alternativeEanCode2;
     private String alternativeEanCode3;
     private String alternativeEanCode4;
+    private double saleFactor;
 
     public int getDocumentCode() {
         return documentCode;
@@ -400,6 +401,14 @@ public class RequestDetails {
 
     public void setAlternativeEanCode4(String alternativeEanCode4) {
         this.alternativeEanCode4 = alternativeEanCode4;
+    }
+
+    public double getSaleFactor() {
+        return saleFactor;
+    }
+
+    public void setSaleFactor(double saleFactor) {
+        this.saleFactor = saleFactor;
     }
 
     public List<String> getBarcodeCodes() {

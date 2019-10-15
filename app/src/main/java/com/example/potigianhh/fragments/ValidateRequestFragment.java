@@ -84,7 +84,18 @@ public class ValidateRequestFragment extends BaseFragment {
         verifyRecyclerViewState();
 
         backButton.setOnClickListener(v -> getMainActivity().replaceFragment(RequestDetailFragment.class));
-        closeRequestButton.setOnClickListener(v -> onCloseRequested());
+        closeRequestButton.setOnClickListener(v -> onPreCloseRequested());
+    }
+
+    private void onPreCloseRequested() {
+        String printer = getMainActivity().getPrinter();
+        new AlertDialog.Builder(this.getContext())
+                .setIcon(R.drawable.ic_info_icon)
+                .setTitle("Aviso de impresora")
+                .setMessage("Actualmente tiene configurada la impresora " + printer + "\n¿Desea continuar?")
+                .setPositiveButton("Aceptar", (dialog, which) -> onCloseRequested())
+                .setNegativeButton("Cancelar", (dialog, which) -> {})
+                .show();
     }
 
     private void onCloseRequested() {

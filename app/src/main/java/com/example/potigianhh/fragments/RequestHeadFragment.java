@@ -21,6 +21,7 @@ import com.google.common.reflect.TypeToken;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,19 +76,35 @@ public class RequestHeadFragment extends BaseFragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         assignCigaretteRequestButton.setOnClickListener(v -> {
-            String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
-                    .replace("{preparerId}", Integer.toString(getPreparer().getId()))
-                    .replace("{onlyCigarettes}", "true");
-            doListRequest(Request.Method.POST, url, RequestHeader.class, null,
-                    RequestHeadFragment.this::onDataReceived, null);
+            new AlertDialog.Builder(this.getContext())
+                    .setIcon(R.drawable.ic_warn_icon)
+                    .setTitle("Atención")
+                    .setMessage("¿Desea tomar pedidos de cigarrillos?")
+                    .setPositiveButton("Si", (dialog, which) -> {
+                        String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
+                                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
+                                .replace("{onlyCigarettes}", "true");
+                        doListRequest(Request.Method.POST, url, RequestHeader.class, null,
+                                RequestHeadFragment.this::onDataReceived, null);
+                    })
+                    .setNegativeButton("No", (dialog, which) -> {})
+                    .show();
         });
 
         assignAnyRequestButton.setOnClickListener(v -> {
-            String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
-                    .replace("{preparerId}", Integer.toString(getPreparer().getId()))
-                    .replace("{onlyCigarettes}", "false");
-            doListRequest(Request.Method.POST, url, RequestHeader.class, null,
-                    RequestHeadFragment.this::onDataReceived, null);
+            new AlertDialog.Builder(this.getContext())
+                    .setIcon(R.drawable.ic_warn_icon)
+                    .setTitle("Atención")
+                    .setMessage("¿Desea tomar pedidos varios?")
+                    .setPositiveButton("Si", (dialog, which) -> {
+                        String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
+                                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
+                                .replace("{onlyCigarettes}", "false");
+                        doListRequest(Request.Method.POST, url, RequestHeader.class, null,
+                                RequestHeadFragment.this::onDataReceived, null);
+                    })
+                    .setNegativeButton("No", (dialog, which) -> {})
+                    .show();
         });
 
         verifyRecyclerViewState();

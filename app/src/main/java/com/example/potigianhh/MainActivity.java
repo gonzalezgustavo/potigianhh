@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             case R.id.menu_api:
                 displayApiAlert();
             break;
+            case R.id.menu_printer:
+                displayPrinterAlert();
+            break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -218,6 +221,36 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     public void setApiUrl(String newValue) {
         set(Constants.API_KEY, newValue);
         Constants.setApiUrl(newValue);
+    }
+
+    public String getPrinter() {
+        String printer = get(Constants.PRINTER_KEY, String.class, new TypeToken<String>(){}.getType());
+        if (printer == null)
+            return "0";
+        return printer;
+    }
+
+    public void setPrinter(String printer) {
+        set(Constants.PRINTER_KEY, printer);
+    }
+
+    private void displayPrinterAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.printer_view, null);
+        TextView currentPrinterView = dialogView.findViewById(R.id.printer_pre);
+        EditText newPrinterView = dialogView.findViewById(R.id.printer_post);
+        String printer = getPrinter();
+
+        builder.setView(dialogView)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    setPrinter(newPrinterView.getText().toString());
+                    Toast.makeText(this, "Se ha cambiado la impresora", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {});
+        currentPrinterView.setText(printer);
+        newPrinterView.setText(printer);
+        builder.show();
     }
 
     private void displayApiAlert() {
