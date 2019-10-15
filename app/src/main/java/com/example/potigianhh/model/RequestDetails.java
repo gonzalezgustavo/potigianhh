@@ -115,22 +115,6 @@ public class RequestDetails {
         this.salePrice = salePrice;
     }
 
-    public double getBaptized() {
-        return baptized;
-    }
-
-    public void setBaptized(double baptized) {
-        this.baptized = baptized;
-    }
-
-    public double getManualPrice() {
-        return manualPrice;
-    }
-
-    public void setManualPrice(double manualPrice) {
-        this.manualPrice = manualPrice;
-    }
-
     public int getFamilyCode() {
         return familyCode;
     }
@@ -145,14 +129,6 @@ public class RequestDetails {
 
     public void setSpecialSaleFactor(Character specialSaleFactor) {
         this.specialSaleFactor = specialSaleFactor;
-    }
-
-    public Character getSalePerWeight() {
-        return salePerWeight;
-    }
-
-    public void setSalePerWeight(Character salePerWeight) {
-        this.salePerWeight = salePerWeight;
     }
 
     public int getPackagesGrams() {
@@ -211,70 +187,6 @@ public class RequestDetails {
         this.totalArticleWeight = totalArticleWeight;
     }
 
-    public int getContainerCode() {
-        return containerCode;
-    }
-
-    public void setContainerCode(int containerCode) {
-        this.containerCode = containerCode;
-    }
-
-    public double getTotalContainerNet() {
-        return totalContainerNet;
-    }
-
-    public void setTotalContainerNet(double totalContainerNet) {
-        this.totalContainerNet = totalContainerNet;
-    }
-
-    public double getRequestGramsUnit() {
-        return requestGramsUnit;
-    }
-
-    public void setRequestGramsUnit(double requestGramsUnit) {
-        this.requestGramsUnit = requestGramsUnit;
-    }
-
-    public double getDeliveredGramsUnit() {
-        return deliveredGramsUnit;
-    }
-
-    public void setDeliveredGramsUnit(double deliveredGramsUnit) {
-        this.deliveredGramsUnit = deliveredGramsUnit;
-    }
-
-    public double getPendingGramsUnit() {
-        return pendingGramsUnit;
-    }
-
-    public void setPendingGramsUnit(double pendingGramsUnit) {
-        this.pendingGramsUnit = pendingGramsUnit;
-    }
-
-    public Character getBillDocumentLetter() {
-        return billDocumentLetter;
-    }
-
-    public void setBillDocumentLetter(Character billDocumentLetter) {
-        this.billDocumentLetter = billDocumentLetter;
-    }
-
-    public int getBillDocumentPrefix() {
-        return billDocumentPrefix;
-    }
-
-    public void setBillDocumentPrefix(int billDocumentPrefix) {
-        this.billDocumentPrefix = billDocumentPrefix;
-    }
-
-    public int getBillDocumentSuffix() {
-        return billDocumentSuffix;
-    }
-
-    public void setBillDocumentSuffix(int billDocumentSuffix) {
-        this.billDocumentSuffix = billDocumentSuffix;
-    }
-
     public Date getInsertDate() {
         return InsertDate;
     }
@@ -289,70 +201,6 @@ public class RequestDetails {
 
     public void setDiscountAppliedToSalePrice(double discountAppliedToSalePrice) {
         this.discountAppliedToSalePrice = discountAppliedToSalePrice;
-    }
-
-    public Character getMobileFlag() {
-        return mobileFlag;
-    }
-
-    public void setMobileFlag(Character mobileFlag) {
-        this.mobileFlag = mobileFlag;
-    }
-
-    public Character getClosedBoxFlag() {
-        return closedBoxFlag;
-    }
-
-    public void setClosedBoxFlag(Character closedBoxFlag) {
-        this.closedBoxFlag = closedBoxFlag;
-    }
-
-    public Character getLineModifiedFlag() {
-        return lineModifiedFlag;
-    }
-
-    public void setLineModifiedFlag(Character lineModifiedFlag) {
-        this.lineModifiedFlag = lineModifiedFlag;
-    }
-
-    public Character getFractionSaleFactorFlag() {
-        return fractionSaleFactorFlag;
-    }
-
-    public void setFractionSaleFactorFlag(Character fractionSaleFactorFlag) {
-        this.fractionSaleFactorFlag = fractionSaleFactorFlag;
-    }
-
-    public Character getModifiedPriceFlag() {
-        return modifiedPriceFlag;
-    }
-
-    public void setModifiedPriceFlag(Character modifiedPriceFlag) {
-        this.modifiedPriceFlag = modifiedPriceFlag;
-    }
-
-    public String getModifiedPriceUserCode() {
-        return modifiedPriceUserCode;
-    }
-
-    public void setModifiedPriceUserCode(String modifiedPriceUserCode) {
-        this.modifiedPriceUserCode = modifiedPriceUserCode;
-    }
-
-    public Character getSpecialBusinessFlag() {
-        return specialBusinessFlag;
-    }
-
-    public void setSpecialBusinessFlag(Character specialBusinessFlag) {
-        this.specialBusinessFlag = specialBusinessFlag;
-    }
-
-    public double getSpecialBusinessSalePrice() {
-        return specialBusinessSalePrice;
-    }
-
-    public void setSpecialBusinessSalePrice(double specialBusinessSalePrice) {
-        this.specialBusinessSalePrice = specialBusinessSalePrice;
     }
 
     public String getDun14Code() {
