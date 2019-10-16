@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import com.example.potigianhh.exceptions.FragmentInitializationException;
 import com.example.potigianhh.exceptions.FragmentNotFoundException;
 import com.example.potigianhh.fragments.BaseFragment;
 import com.example.potigianhh.fragments.LoginFragment;
+import com.example.potigianhh.fragments.RequestHeadFragment;
 import com.example.potigianhh.utils.BarcodeUtils;
 import com.example.potigianhh.utils.Constants;
 import com.example.potigianhh.utils.StoreService;
@@ -77,6 +79,16 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (getCurrentFragment().getFragmentName().equals("LoginFragment")) {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.ic_error_icon)
+                    .setTitle("Menú de usuario")
+                    .setMessage("Esta opción está deshabilitada en el login")
+                    .setPositiveButton("Aceptar", (dialog, which) -> {})
+                    .show();
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.menu_logout:
                 findFragmentByClass(LoginFragment.class).logout();
@@ -86,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             break;
             case R.id.menu_printer:
                 displayPrinterAlert();
+            break;
+            case R.id.menu_clear_requests:
+                displayClearRequestsAlert();
             break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -264,6 +279,27 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         newView.setText(url);
         urlView.setText(url);
         builder.show();
+    }
+
+    private void displayClearRequestsAlert() {
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_warn_icon)
+                .setTitle("Aviso de pedidos")
+                .setMessage("¿Deseas limpiar los pedidos asignados?")
+                .setPositiveButton("Si", (dialog, which) -> clearAssignedRequests())
+                .setNegativeButton("No", (dialog, which) -> {})
+                .show();
+    }
+
+    private void clearAssignedRequests() {
+        if (!getCurrentFragment().getFragmentName().equals("RequestHeadFragment")) {
+            replaceFragment(RequestHeadFragment.class);
+        }
+        (new Handler()).postDelayed(this::doClearRequests, 1000);
+    }
+
+    private void doClearRequests() {
+        ((RequestHeadFragment) currentFragment).clearAssignedRequests();
     }
 
     private Class<? extends BaseFragment> castFragmentNameToClass(String fragmentName) {

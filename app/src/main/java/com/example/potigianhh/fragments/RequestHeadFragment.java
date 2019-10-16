@@ -16,8 +16,8 @@ import com.example.potigianhh.fragments.adapters.RequestHeadersAdapter;
 import com.example.potigianhh.fragments.decorators.RequestMarginDecorator;
 import com.example.potigianhh.model.RequestHeader;
 import com.example.potigianhh.utils.Constants;
-import com.google.common.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -65,12 +65,11 @@ public class RequestHeadFragment extends BaseFragment {
 
         getMainActivity().remove(Constants.CURRENT_REQUEST_KEY);
 
-        String urlInit = Constants.REQUESTS_HEADERS_ASSIGNED_URL
+        String urlInit = Constants.REQUESTS_HEADERS_ASSIGNED_SIMPLE
                 .replace("{preparerId}", Integer.toString(getPreparer().getId()));
         doListRequest(Request.Method.GET, urlInit, RequestHeader.class, null,
                 RequestHeadFragment.this::onInitialDataReceived, null);
 
-        //recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), requests));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new RequestMarginDecorator( 5));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -110,6 +109,24 @@ public class RequestHeadFragment extends BaseFragment {
         verifyRecyclerViewState();
 
         userText.setText("Trabajando como " + getPreparer().getName());
+    }
+
+    public void clearAssignedRequests() {
+        String url = Constants.REQUESTS_HEADERS_ASSIGNED_SIMPLE
+                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
+            + "/clear";
+        doRequest(Request.Method.POST, url, Boolean.class, null,
+                RequestHeadFragment.this::onClearedRequests, null);
+    }
+
+    private void onClearedRequests(boolean response) {
+        if (response) {
+            this.displayToast("Se limpiaron los pedidos asignados.");
+            final RecyclerView recyclerView = getView().findViewById(R.id.requesthead_list);
+            recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), new ArrayList<>()));
+
+            verifyRecyclerViewState();
+        }
     }
 
     private void onInitialDataReceived(List<RequestHeader> requestHeaders) {
