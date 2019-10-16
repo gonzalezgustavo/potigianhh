@@ -88,24 +88,6 @@ public class BillFragment extends BaseFragment {
                             .replace("{document}", request.getDocumentCode().toString())
                             .replace("{suffixDoc}", request.getDocumentSuffix().toString()));
 
-                    List<RequestHeader> requests = new ArrayList<>(getMainActivity().get(Constants.ASSIGNED_KEY.replace(
-                            "{preparerId}",
-                            Integer.toString(getPreparer().getId())),
-                            List.class,
-                            new TypeToken<List<RequestHeader>>(){}.getType()));
-
-                    for (int i = 0; i < requests.size(); i++) {
-                        RequestHeader currentRequest = requests.get(i);
-                        if (currentRequest.getDocumentPrefix().equals(request.getDocumentPrefix()) &&
-                                currentRequest.getDocumentCode().equals(request.getDocumentCode()) &&
-                                currentRequest.getDocumentSuffix().equals(request.getDocumentSuffix())) {
-                            requests.remove(i);
-                            break;
-                        }
-                    }
-                    getMainActivity().set(Constants.ASSIGNED_KEY
-                            .replace("{preparerId}",
-                                    Integer.toString(getPreparer().getId())), requests);
                     getMainActivity().replaceFragment(RequestHeadFragment.class);
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> {})
@@ -119,8 +101,10 @@ public class BillFragment extends BaseFragment {
                 .findViewById(R.id.bill_scrollview_inner_content)
                 .findViewById(R.id.bill_product_list);
         final TextView totalView = getView().findViewById(R.id.bill_total_text);
-        String totalText = "Total: $ " + new DecimalFormat("#.00").format((Double) requestDetails.stream()
-                .map(RequestDetails::getArticleTotal).mapToDouble(Double::doubleValue).sum());
+        String totalText = "Total: $ " + new DecimalFormat("#.00").format((Double) requestDetails
+                .stream()
+                .map(d -> d.getFinalArticleUnitaryPrice() * d.getPackagesGrams())
+                .mapToDouble(Double::doubleValue).sum());
         totalView.setText(totalText);
         recyclerView.setAdapter(new BillAdapter(getMainActivity(), requestDetails));
     }

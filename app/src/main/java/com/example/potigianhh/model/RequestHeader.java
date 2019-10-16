@@ -26,6 +26,7 @@ public class RequestHeader {
     private Long distributionNumber;
     private String preparerCode;
     private Date preparerDate;
+    private Integer printer;
 
     public Integer getDocumentCode() {
         return documentCode;
@@ -209,6 +210,14 @@ public class RequestHeader {
 
     public void setPreparerDate(Date preparerDate) {
         this.preparerDate = preparerDate;
+    }
+
+    public Integer getPrinter() {
+        return printer;
+    }
+
+    public void setPrinter(Integer printer) {
+        this.printer = printer;
     }
 
     public String getComposedDoc() {

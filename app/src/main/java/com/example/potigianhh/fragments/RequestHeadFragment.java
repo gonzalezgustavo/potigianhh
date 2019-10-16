@@ -64,13 +64,13 @@ public class RequestHeadFragment extends BaseFragment {
         final RecyclerView recyclerView = view.findViewById(R.id.requesthead_list);
 
         getMainActivity().remove(Constants.CURRENT_REQUEST_KEY);
-        List<RequestHeader> requests = getMainActivity().get(Constants.ASSIGNED_KEY.replace(
-                    "{preparerId}",
-                    Integer.toString(getPreparer().getId())),
-                List.class,
-                new TypeToken<List<RequestHeader>>(){}.getType());
 
-        recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), requests));
+        String urlInit = Constants.REQUESTS_HEADERS_ASSIGNED_URL
+                .replace("{preparerId}", Integer.toString(getPreparer().getId()));
+        doListRequest(Request.Method.GET, urlInit, RequestHeader.class, null,
+                RequestHeadFragment.this::onInitialDataReceived, null);
+
+        //recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), requests));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new RequestMarginDecorator( 5));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -112,6 +112,15 @@ public class RequestHeadFragment extends BaseFragment {
         userText.setText("Trabajando como " + getPreparer().getName());
     }
 
+    private void onInitialDataReceived(List<RequestHeader> requestHeaders) {
+        if (requestHeaders.size() > 0) {
+            final RecyclerView recyclerView = getView().findViewById(R.id.requesthead_list);
+            recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), requestHeaders));
+
+            verifyRecyclerViewState();
+        }
+    }
+
     private void onDataReceived(List<RequestHeader> requestHeaders) {
         if (requestHeaders.size() == 0) {
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -124,18 +133,13 @@ public class RequestHeadFragment extends BaseFragment {
         recyclerView.setAdapter(new RequestHeadersAdapter(getMainActivity(), requestHeaders));
 
         verifyRecyclerViewState();
-
-        getMainActivity().set(
-                Constants.ASSIGNED_KEY
-                        .replace("{preparerId}", Integer.toString(getPreparer().getId())),
-                requestHeaders);
     }
 
     private void verifyRecyclerViewState() {
         final TextView emptyView = getView().findViewById(R.id.requesthead_empty_list);
         final RecyclerView recyclerView = getView().findViewById(R.id.requesthead_list);
 
-        if (recyclerView.getAdapter().getItemCount() == 0) {
+        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {

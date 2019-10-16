@@ -165,14 +165,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     }
 
     @Override
-    public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {
-        new AlertDialog.Builder(this)
-                .setIcon(R.drawable.ic_error_icon)
-                .setTitle("Error de escáner")
-                .setMessage("Ha ocurrido un error al intentar leer un valor del escáner.")
-                .setPositiveButton("Aceptar", (dialog, which) -> {})
-                .show();
-    }
+    public void onFailureEvent(BarcodeFailureEvent barcodeFailureEvent) {}
 
     public <T> T get(String key, Class<T> clazz, Type clazzType) {
         return StoreService.getInstance().get(key, clazz, clazzType, this.getApplicationContext());

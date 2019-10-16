@@ -13,6 +13,7 @@ import com.android.volley.Request;
 import com.example.potigianhh.R;
 import com.example.potigianhh.fragments.adapters.RequestValidationAdapter;
 import com.example.potigianhh.fragments.decorators.RequestMarginDecorator;
+import com.example.potigianhh.model.CloseRequestPayload;
 import com.example.potigianhh.model.RequestDetails;
 import com.example.potigianhh.model.RequestHeader;
 import com.example.potigianhh.utils.Constants;
@@ -113,17 +114,20 @@ public class ValidateRequestFragment extends BaseFragment {
                 new TypeToken<SparseArray<String>>(){}.getType());
 
         Map<Integer, Integer> values = new HashMap<>();
+        String printer = getMainActivity().getPrinter();
 
         for (int i = 0; i < storedValues.size(); i++) {
             values.put(storedValues.keyAt(i), Integer.valueOf(storedValues.valueAt(i)));
         }
+
+        CloseRequestPayload payload = new CloseRequestPayload(values, Integer.valueOf(printer));
 
         String url = Constants.REQUEST_CLOSE_URL
                 .replace("{prefixDoc}", request.getDocumentPrefix().toString())
                 .replace("{document}", request.getDocumentCode().toString())
                 .replace("{suffixDoc}", request.getDocumentSuffix().toString());
 
-        doRequest(Request.Method.POST, url, Boolean.class, values, this::onCloseResponse, null);
+        doRequest(Request.Method.POST, url, Boolean.class, payload, this::onCloseResponse, null);
     }
 
     private void onCloseResponse(boolean closed) {
