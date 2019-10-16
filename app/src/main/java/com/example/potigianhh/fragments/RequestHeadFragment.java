@@ -112,9 +112,8 @@ public class RequestHeadFragment extends BaseFragment {
     }
 
     public void clearAssignedRequests() {
-        String url = Constants.REQUESTS_HEADERS_ASSIGNED_SIMPLE
-                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
-            + "/clear";
+        String url = Constants.REQUESTS_HEADERS_ASSIGNED_CLEAR
+                .replace("{preparerId}", Integer.toString(getPreparer().getId()));
         doRequest(Request.Method.POST, url, Boolean.class, null,
                 RequestHeadFragment.this::onClearedRequests, null);
     }

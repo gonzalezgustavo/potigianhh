@@ -14,6 +14,8 @@ public class Constants {
     public static final String DEFAULT_BASE = "http://192.168.10.98:9092/api";
     public static String LOGIN_URL;
     public static String REQUESTS_HEADERS_ASSIGNED_SIMPLE;
+    public static String REQUESTS_HEADERS_ASSIGNED_CLEAR;
+    public static String REQUESTS_HEADERS_ASSIGNED_START;
     public static String REQUESTS_HEADERS_ASSIGNED_URL;
     public static String REQUEST_DETAILS_URL;
     public static String REQUEST_CLOSE_URL;
@@ -35,6 +37,8 @@ public class Constants {
     public static void setApiUrl(String baseUrl) {
         LOGIN_URL = baseUrl + "/preparadores/{preparerId}";
         REQUESTS_HEADERS_ASSIGNED_SIMPLE = baseUrl + "/pedidos/cabe/asignados/{preparerId}";
+        REQUESTS_HEADERS_ASSIGNED_CLEAR = REQUESTS_HEADERS_ASSIGNED_SIMPLE + "/clear";
+        REQUESTS_HEADERS_ASSIGNED_START = baseUrl + "/pedidos/cabe/asignados/{prefixDoc}/{document}/{suffixDoc}/start/{preparerId}";
         REQUESTS_HEADERS_ASSIGNED_URL = baseUrl + "/pedidos/cabe/asignados/{preparerId}?cigarrillos={onlyCigarettes}";
         REQUEST_DETAILS_URL = baseUrl + "/pedidos/detalle/{prefixDoc}/{document}/{suffixDoc}";
         REQUEST_CLOSE_URL = baseUrl + "/pedidos/preparaciones/{prefixDoc}/{document}/{suffixDoc}";

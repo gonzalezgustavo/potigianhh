@@ -140,6 +140,14 @@ public class RequestDetailFragment extends BaseFragment {
         doListRequest(Request.Method.GET, url, RequestDetails.class, null,
                 RequestDetailFragment.this::onDataReceived, null);
 
+        String startUrl = Constants.REQUESTS_HEADERS_ASSIGNED_START
+                .replace("{prefixDoc}", request.getDocumentPrefix().toString())
+                .replace("{document}", request.getDocumentCode().toString())
+                .replace("{suffixDoc}", request.getDocumentSuffix().toString())
+                .replace("{preparerId}", Integer.toString(getPreparer().getId()));
+        doRequest(Request.Method.POST, startUrl, Boolean.class, null,
+                t -> {}, null);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.addItemDecoration(new RequestMarginDecorator( 5));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
