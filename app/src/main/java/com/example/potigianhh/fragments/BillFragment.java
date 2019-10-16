@@ -103,7 +103,7 @@ public class BillFragment extends BaseFragment {
         final TextView totalView = getView().findViewById(R.id.bill_total_text);
         String totalText = "Total: $ " + new DecimalFormat("#.00").format((Double) requestDetails
                 .stream()
-                .map(d -> d.getFinalArticleUnitaryPrice() * d.getPackagesGrams())
+                .map(d -> d.getArticleUnitaryPrice() * d.getPackagesGrams())
                 .mapToDouble(Double::doubleValue).sum());
         totalView.setText(totalText);
         recyclerView.setAdapter(new BillAdapter(getMainActivity(), requestDetails));

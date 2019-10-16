@@ -42,8 +42,8 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.ViewHolder> {
         final RequestDetails request = requests.get(position);
         DecimalFormat format = new DecimalFormat("#.00");
         String article = request.getArticleCode() + " - " + request.getArticleName().trim();
-        String price = "$ " + format.format(request.getFinalArticleUnitaryPrice());
-        String total = "$ " + format.format(request.getFinalArticleUnitaryPrice() * request.getPackagesGrams());
+        String price = "$ " + format.format(request.getArticleUnitaryPrice());
+        String total = "$ " + format.format(request.getArticleUnitaryPrice() * request.getPackagesGrams());
         holder.articleView.setText(article);
         holder.countView.setText(Integer.toString(request.getPackagesGrams()));
         holder.priceView.setText(price);
