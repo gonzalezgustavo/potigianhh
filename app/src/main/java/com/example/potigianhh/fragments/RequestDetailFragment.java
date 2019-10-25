@@ -102,6 +102,8 @@ public class RequestDetailFragment extends BaseFragment {
                         new Handler(Looper.getMainLooper()).post(() -> holder.updateActualValue(newValue));
                     }
 
+                    adapter.notifyItemChanged(i);
+
                     break;
                 }
             }
