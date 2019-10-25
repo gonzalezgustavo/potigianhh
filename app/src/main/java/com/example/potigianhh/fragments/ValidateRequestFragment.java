@@ -90,13 +90,19 @@ public class ValidateRequestFragment extends BaseFragment {
 
     private void onPreCloseRequested() {
         String printer = getMainActivity().getPrinter();
-        new AlertDialog.Builder(this.getContext())
-                .setIcon(R.drawable.ic_info_icon)
-                .setTitle("Aviso de impresora")
-                .setMessage("Actualmente tiene configurada la impresora " + printer + "\n¿Desea continuar?")
-                .setPositiveButton("Aceptar", (dialog, which) -> onCloseRequested())
-                .setNegativeButton("Cancelar", (dialog, which) -> {})
-                .show();
+
+        if ("0".equals(printer)) {
+            new AlertDialog.Builder(this.getContext())
+                    .setIcon(R.drawable.ic_info_icon)
+                    .setTitle("Aviso de impresora")
+                    .setMessage("Actualmente no tiene configurada la impresora (está con el valor por defecto)\n¿Desea continuar?")
+                    .setPositiveButton("Aceptar", (dialog, which) -> onCloseRequested())
+                    .setNegativeButton("Cancelar", (dialog, which) -> {
+                    })
+                    .show();
+        } else {
+            onCloseRequested();
+        }
     }
 
     private void onCloseRequested() {
