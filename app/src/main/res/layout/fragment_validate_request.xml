@@ -101,7 +101,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/validaterequest_request_edit_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/validaterequest_request_button_guideline"
@@ -181,6 +188,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/validaterequest_btn_midleft_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/validaterequest_btn_midright_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <EditText
+        android:id="@+id/validaterequest_packs_edit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:textIsSelectable="true"
+        android:hint="Bultos"
+        app:layout_constraintLeft_toLeftOf="@+id/validaterequest_btn_midleft_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/validaterequest_btn_midright_guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/validaterequest_request_edit_guideline" />
 
     <LinearLayout
         android:layout_width="0dp"

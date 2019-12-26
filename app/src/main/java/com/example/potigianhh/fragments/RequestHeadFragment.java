@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.example.potigianhh.R;
@@ -74,37 +76,9 @@ public class RequestHeadFragment extends BaseFragment {
         recyclerView.addItemDecoration(new RequestMarginDecorator( 5));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        assignCigaretteRequestButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(this.getContext())
-                    .setIcon(R.drawable.ic_warn_icon)
-                    .setTitle("Atención")
-                    .setMessage("¿Desea tomar pedidos de cigarrillos?")
-                    .setPositiveButton("Si", (dialog, which) -> {
-                        String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
-                                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
-                                .replace("{onlyCigarettes}", "true");
-                        doListRequest(Request.Method.POST, url, RequestHeader.class, null,
-                                RequestHeadFragment.this::onDataReceived, null);
-                    })
-                    .setNegativeButton("No", (dialog, which) -> {})
-                    .show();
-        });
+        assignCigaretteRequestButton.setOnClickListener(v -> displayPreparingAlert(true));
 
-        assignAnyRequestButton.setOnClickListener(v -> {
-            new AlertDialog.Builder(this.getContext())
-                    .setIcon(R.drawable.ic_warn_icon)
-                    .setTitle("Atención")
-                    .setMessage("¿Desea tomar pedidos varios?")
-                    .setPositiveButton("Si", (dialog, which) -> {
-                        String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
-                                .replace("{preparerId}", Integer.toString(getPreparer().getId()))
-                                .replace("{onlyCigarettes}", "false");
-                        doListRequest(Request.Method.POST, url, RequestHeader.class, null,
-                                RequestHeadFragment.this::onDataReceived, null);
-                    })
-                    .setNegativeButton("No", (dialog, which) -> {})
-                    .show();
-        });
+        assignAnyRequestButton.setOnClickListener(v -> displayPreparingAlert(false));
 
         verifyRecyclerViewState();
 
@@ -116,6 +90,53 @@ public class RequestHeadFragment extends BaseFragment {
                 .replace("{preparerId}", Integer.toString(getPreparer().getId()));
         doRequest(Request.Method.POST, url, Boolean.class, null,
                 RequestHeadFragment.this::onClearedRequests, null);
+    }
+
+    private void displayPreparingAlert(boolean cigarettesOnly) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.preparing_view, null);
+        EditText deliveryText = dialogView.findViewById(R.id.preparing_delivery_text);
+        EditText suffixText = dialogView.findViewById(R.id.preparing_suffix_text);
+
+        builder.setView(dialogView)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    int suffix = 0, delivery = 0;
+                    try { suffix = Integer.parseInt(suffixText.getText().toString()); } catch (Exception e) {}
+                    try { delivery = Integer.parseInt(deliveryText.getText().toString()); } catch (Exception e) {}
+                    if (suffix == 0 && delivery == 0) {
+                        displayErrorDialog("Datos inválidos", "Debes ingresar número de sufijo o reparto");
+                        return;
+                    }
+                    showAlertDialog(cigarettesOnly, suffix, delivery);
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {});
+        builder.show();
+    }
+
+    private AlertDialog showAlertDialog(boolean cigarettesOnly, int suffix, int delivery) {
+        String message = "¿Desea tomar pedidos varios?";
+        String onlyCigarettesStr = String.valueOf(cigarettesOnly);
+
+        if (cigarettesOnly) {
+            message = "¿Desea tomar pedidos de cigarrillos?";
+        }
+
+        return new AlertDialog.Builder(this.getContext())
+                .setIcon(R.drawable.ic_warn_icon)
+                .setTitle("Atención")
+                .setMessage(message)
+                .setPositiveButton("Si", (dialog, which) -> {
+                    String url = Constants.REQUESTS_HEADERS_ASSIGNED_URL
+                            .replace("{preparerId}", Integer.toString(getPreparer().getId()))
+                            .replace("{onlyCigarettes}", onlyCigarettesStr)
+                            .replace("{suffixNumber}", Integer.toString(suffix))
+                            .replace("{deliveryNumber}", Integer.toString(delivery));
+                    doListRequest(Request.Method.POST, url, RequestHeader.class, null,
+                            RequestHeadFragment.this::onDataReceived, null);
+                })
+                .setNegativeButton("No", (dialog, which) -> {})
+                .show();
     }
 
     private void onClearedRequests(boolean response) {

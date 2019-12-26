@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -90,6 +91,18 @@ public class ValidateRequestFragment extends BaseFragment {
 
     private void onPreCloseRequested() {
         String printer = getMainActivity().getPrinter();
+        EditText bagsText = this.getView().findViewById(R.id.validaterequest_packs_edit);
+        String bagsAsString = bagsText.getText().toString();
+
+        if (bagsAsString.isEmpty()) {
+            new AlertDialog.Builder(this.getContext())
+                    .setIcon(R.drawable.ic_error_icon)
+                    .setTitle("Aviso de bultos")
+                    .setMessage("Falta ingresar cantidad de bultos")
+                    .setPositiveButton("Aceptar", (dialog, which) -> {})
+                    .show();
+            return;
+        }
 
         if ("0".equals(printer)) {
             new AlertDialog.Builder(this.getContext())
@@ -100,9 +113,10 @@ public class ValidateRequestFragment extends BaseFragment {
                     .setNegativeButton("Cancelar", (dialog, which) -> {
                     })
                     .show();
-        } else {
-            onCloseRequested();
+            return;
         }
+
+        onCloseRequested();
     }
 
     private void onCloseRequested() {
@@ -121,12 +135,15 @@ public class ValidateRequestFragment extends BaseFragment {
 
         Map<Integer, Integer> values = new HashMap<>();
         String printer = getMainActivity().getPrinter();
+        EditText bagsText = this.getView().findViewById(R.id.validaterequest_packs_edit);
+        String bagsAsString = bagsText.getText().toString();
 
         for (int i = 0; i < storedValues.size(); i++) {
             values.put(storedValues.keyAt(i), Integer.valueOf(storedValues.valueAt(i)));
         }
 
-        CloseRequestPayload payload = new CloseRequestPayload(values, Integer.valueOf(printer));
+        CloseRequestPayload payload = new CloseRequestPayload(
+                values, Integer.valueOf(printer), Integer.valueOf(bagsAsString));
 
         String url = Constants.REQUEST_CLOSE_URL
                 .replace("{prefixDoc}", request.getDocumentPrefix().toString())
