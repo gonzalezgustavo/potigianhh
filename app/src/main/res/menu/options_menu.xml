@@ -9,6 +9,9 @@
     <item android:id="@+id/menu_api"
         android:title="Configurar API" />
 
+    <item android:id="@+id/menu_multiplier"
+        android:title="Multiplicadores" />
+
     <item android:id="@+id/menu_logout"
     android:title="Cerrar sesión" />
 </menu>

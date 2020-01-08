@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (getCurrentFragment().getFragmentName().equals("LoginFragment")) {
+        if (getCurrentFragment().getFragmentName().equals("LoginFragment")
+            && item.getItemId() != R.id.menu_api) {
             new AlertDialog.Builder(this)
                     .setIcon(R.drawable.ic_error_icon)
                     .setTitle("Menú de usuario")
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
             case R.id.menu_clear_requests:
                 displayClearRequestsAlert();
             break;
+            case R.id.menu_multiplier:
+                displayMultiplierAlert();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -242,6 +247,18 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         set(Constants.PRINTER_KEY, printer);
     }
 
+    public int getMultiplierValue(int i) {
+        Integer multiplier = get(Constants.MULTIPLIER_KEY.replace("{id}", Integer.toString(i)),
+                Integer.class, new TypeToken<Integer>(){}.getType());
+        if (multiplier == null)
+            return 1;
+        return multiplier;
+    }
+
+    public void setMultiplierValue(int i, int value) {
+        set(Constants.MULTIPLIER_KEY.replace("{id}", Integer.toString(i)), value);
+    }
+
     private void displayPrinterAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -259,6 +276,54 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         currentPrinterView.setText(printer);
         newPrinterView.setText(printer);
         builder.show();
+    }
+
+    private void displayMultiplierAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.multiplier_view, null);
+        TextView currentValue = dialogView.findViewById(R.id.multiplier_pre);
+        TextView article = dialogView.findViewById(R.id.multiplier_article);
+        EditText newValue = dialogView.findViewById(R.id.multiplier_post);
+
+        builder.setView(dialogView)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    setMultiplierValue(Integer.parseInt(article.getText().toString()),
+                            Integer.parseInt(newValue.getText().toString()));
+                    Toast.makeText(this, "Se ha cambiado el multiplicador", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("Cancelar", (dialog, which) -> {});
+        AlertDialog dialog = builder.show();
+
+        article.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (article.getText().length() > 0) {
+                    int artNumber = Integer.parseInt(article.getText().toString());
+                    String value = Integer.toString(getMultiplierValue(artNumber));
+                    currentValue.setText(value);
+                    newValue.setText(value);
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                } else {
+                    currentValue.setText("");
+                    newValue.setText("");
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                }
+            }
+        });
+        currentValue.setText("");
+        newValue.setText("");
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
 
     private void displayApiAlert() {

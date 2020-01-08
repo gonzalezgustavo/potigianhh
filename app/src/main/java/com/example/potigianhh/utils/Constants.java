@@ -31,7 +31,7 @@ public class Constants {
     public static final String COUNT_REQUEST_KEY = "_countRequest:{prefixDoc}-{document}-{suffixDoc}";
     public static final String API_KEY = "_api";
     public static final String PRINTER_KEY = "_printer";
-
+    public static final String MULTIPLIER_KEY = "_multiplier:{id}";
     public static final String DATE_SUFFIX = "_date";
 
     public static void setApiUrl(String baseUrl) {

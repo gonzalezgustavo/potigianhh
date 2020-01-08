@@ -17,6 +17,7 @@ import com.example.potigianhh.fragments.adapters.RequestDetailsAdapter;
 import com.example.potigianhh.fragments.decorators.RequestMarginDecorator;
 import com.example.potigianhh.model.RequestDetails;
 import com.example.potigianhh.model.RequestHeader;
+import com.example.potigianhh.utils.AudioPlayer;
 import com.example.potigianhh.utils.Constants;
 import com.google.common.reflect.TypeToken;
 
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RequestDetailFragment extends BaseFragment {
+    private AudioPlayer audioPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class RequestDetailFragment extends BaseFragment {
         RequestDetailsAdapter adapter = (RequestDetailsAdapter) recyclerView.getAdapter();
 
         if (adapter != null) {
+            boolean matchedItem = false;
+
             for (int i = 0; i < adapter.getItemCount(); i++) {
                 RequestDetails request = adapter.getItemAt(i);
                 // To make sure it matches, we simply validate, not only the value, but also the
@@ -91,9 +95,11 @@ public class RequestDetailFragment extends BaseFragment {
                         .anyMatch(s -> s.equals(content) || s.substring(0, s.length() - 1).equals(content)))
                 {
                     String currentValue = adapter.getValueAt(i);
+                    int multiplier = getMainActivity().getMultiplierValue(request.getArticleCode());
+
                     if ("".equals(currentValue))
                         currentValue = "0";
-                    String newValue = Integer.toString(Integer.parseInt(currentValue) + (int) request.getSaleFactor());
+                    String newValue = Integer.toString(Integer.parseInt(currentValue) + (multiplier * (int) request.getSaleFactor()));
                     adapter.setValueAt(i, newValue);
 
                     RequestDetailsAdapter.ViewHolder holder =
@@ -102,11 +108,19 @@ public class RequestDetailFragment extends BaseFragment {
                         new Handler(Looper.getMainLooper()).post(() -> holder.updateActualValue(newValue));
                     }
 
-                    adapter.notifyItemChanged(i);
+                    final int index = i;
+                    getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(index));
 
+                    matchedItem = true;
                     break;
                 }
             }
+
+            if (audioPlayer == null) {
+                audioPlayer = new AudioPlayer();
+            }
+
+            audioPlayer.play(this.getContext(), matchedItem ? R.raw.ok : R.raw.nok);
         }
     }
 
