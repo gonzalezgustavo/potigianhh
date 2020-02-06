@@ -130,7 +130,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.88" />
+        app:layout_constraintGuide_percent="0.82" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/requestdetail_request_checkbox_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/requestdetail_request_button_guideline"
@@ -223,6 +230,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.95" />
+
+    <CheckBox
+        android:id="@+id/requestdetail_product_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contar mitad"
+        app:layout_constraintLeft_toLeftOf="@+id/requestdetail_left_guideline"
+        app:layout_constraintRight_toLeftOf="@+id/requestdetail_right_guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/requestdetail_request_checkbox_guideline" />
 
     <LinearLayout
         android:layout_width="0dp"

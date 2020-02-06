@@ -23,6 +23,7 @@ import com.example.potigianhh.exceptions.FragmentNotFoundException;
 import com.example.potigianhh.fragments.BaseFragment;
 import com.example.potigianhh.fragments.LoginFragment;
 import com.example.potigianhh.fragments.RequestHeadFragment;
+import com.example.potigianhh.utils.AudioPlayer;
 import com.example.potigianhh.utils.BarcodeUtils;
 import com.example.potigianhh.utils.Constants;
 import com.example.potigianhh.utils.StoreService;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
     private BaseFragment currentFragment;
     private AidcManager manager;
     private BarcodeReader reader;
+    private AudioPlayer audioPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,6 +243,14 @@ public class MainActivity extends AppCompatActivity implements BarcodeReader.Bar
         if (printer == null)
             return "0";
         return printer;
+    }
+
+    public void playSound(int resource) {
+        if (audioPlayer == null) {
+            audioPlayer = new AudioPlayer();
+        }
+
+        audioPlayer.play(this, resource);
     }
 
     public void setPrinter(String printer) {

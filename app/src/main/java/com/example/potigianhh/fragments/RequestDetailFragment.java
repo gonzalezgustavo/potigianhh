@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -31,8 +32,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RequestDetailFragment extends BaseFragment {
-    private AudioPlayer audioPlayer;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +79,7 @@ public class RequestDetailFragment extends BaseFragment {
     public void onBarcode(String content) {
         final RecyclerView recyclerView = getView().findViewById(R.id.requestdetail_product_list);
         RequestDetailsAdapter adapter = (RequestDetailsAdapter) recyclerView.getAdapter();
+        boolean isHalfSelected = ((CheckBox)getView().findViewById(R.id.requestdetail_product_checkbox)).isChecked();
 
         if (adapter != null) {
             boolean matchedItem = false;
@@ -99,7 +99,12 @@ public class RequestDetailFragment extends BaseFragment {
 
                     if ("".equals(currentValue))
                         currentValue = "0";
-                    String newValue = Integer.toString(Integer.parseInt(currentValue) + (multiplier * (int) request.getSaleFactor()));
+
+                    int toAdd = (multiplier * (int) request.getSaleFactor());
+                    if (isHalfSelected)
+                        toAdd /= 2;
+
+                    String newValue = Integer.toString(Integer.parseInt(currentValue) + toAdd);
                     adapter.setValueAt(i, newValue);
 
                     RequestDetailsAdapter.ViewHolder holder =
@@ -112,15 +117,18 @@ public class RequestDetailFragment extends BaseFragment {
                     getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(index));
 
                     matchedItem = true;
+
+                    if (Integer.parseInt(newValue) > request.getPackagesGrams())
+                        getMainActivity().playSound(R.raw.nok);
+                    else
+                        getMainActivity().playSound(R.raw.ok);
+
                     break;
                 }
             }
 
-            if (audioPlayer == null) {
-                audioPlayer = new AudioPlayer();
-            }
-
-            audioPlayer.play(this.getContext(), matchedItem ? R.raw.ok : R.raw.nok);
+            if (!matchedItem)
+                getMainActivity().playSound(R.raw.nok);
         }
     }
 
