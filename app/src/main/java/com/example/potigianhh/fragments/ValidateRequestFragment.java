@@ -2,7 +2,6 @@ package com.example.potigianhh.fragments;
 
 import android.os.Bundle;
 
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,21 +124,21 @@ public class ValidateRequestFragment extends BaseFragment {
                 RequestHeader.class,
                 new TypeToken<RequestHeader>(){}.getType());
 
-        SparseArray<String> storedValues = getMainActivity().get(
+        HashMap<String, String> storedValues = getMainActivity().get(
                 Constants.COUNT_REQUEST_KEY
                         .replace("{prefixDoc}", request.getDocumentPrefix().toString())
                         .replace("{document}", request.getDocumentCode().toString())
                         .replace("{suffixDoc}", request.getDocumentSuffix().toString()),
-                SparseArray.class,
-                new TypeToken<SparseArray<String>>(){}.getType());
+                HashMap.class,
+                new TypeToken<HashMap<String, String>>(){}.getType());
 
-        Map<Integer, Integer> values = new HashMap<>();
+        Map<String, Integer> values = new HashMap<>();
         String printer = getMainActivity().getPrinter();
         EditText bagsText = this.getView().findViewById(R.id.validaterequest_packs_edit);
         String bagsAsString = bagsText.getText().toString();
 
-        for (int i = 0; i < storedValues.size(); i++) {
-            values.put(storedValues.keyAt(i), Integer.valueOf(storedValues.valueAt(i)));
+        for (Map.Entry<String, String> entry : storedValues.entrySet()) {
+            values.put(entry.getKey(), Integer.valueOf(entry.getValue()));
         }
 
         CloseRequestPayload payload = new CloseRequestPayload(
@@ -191,13 +190,13 @@ public class ValidateRequestFragment extends BaseFragment {
                 RequestHeader.class,
                 new TypeToken<RequestHeader>(){}.getType());
 
-        SparseArray<String> storedValues = getMainActivity().get(
+        HashMap<String, String> storedValues = getMainActivity().get(
                 Constants.COUNT_REQUEST_KEY
                         .replace("{prefixDoc}", request.getDocumentPrefix().toString())
                         .replace("{document}", request.getDocumentCode().toString())
                         .replace("{suffixDoc}", request.getDocumentSuffix().toString()),
-                SparseArray.class,
-                new TypeToken<SparseArray<String>>(){}.getType());
+                HashMap.class,
+                new TypeToken<HashMap<String, String>>(){}.getType());
 
         setTotalPrice(requestDetails, storedValues);
         RecyclerView recyclerView = getView().findViewById(R.id.validaterequest_product_list);
@@ -206,13 +205,13 @@ public class ValidateRequestFragment extends BaseFragment {
         verifyRecyclerViewState();
     }
 
-    private void setTotalPrice(List<RequestDetails> details, SparseArray<String> actualValues) {
+    private void setTotalPrice(List<RequestDetails> details, Map<String, String> actualValues) {
         final TextView totalPrice = getView().findViewById(R.id.validaterequest_total_text);
 
         double price = 0;
         for (int i = 0; i < details.size(); i++) {
             RequestDetails detail = details.get(i);
-            int count = Integer.valueOf(actualValues.get(detail.getArticleCode(), "0"));
+            int count = Integer.valueOf(actualValues.getOrDefault(detail.getDictionaryKey(), "0"));
             price += (detail.getSalePrice() * count);
         }
 

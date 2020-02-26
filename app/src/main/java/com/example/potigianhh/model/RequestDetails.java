@@ -1,5 +1,8 @@
 package com.example.potigianhh.model;
 
+import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +25,7 @@ public class RequestDetails {
     private double IVA;
     private double articleTotal;
     private double totalArticleWeight;
-    private Date InsertDate;
+    private Date insertDate;
     private double discountAppliedToSalePrice;
     private String dun14Code;
     private String eanCode;
@@ -169,11 +172,11 @@ public class RequestDetails {
     }
 
     public Date getInsertDate() {
-        return InsertDate;
+        return insertDate;
     }
 
     public void setInsertDate(Date insertDate) {
-        InsertDate = insertDate;
+        insertDate = insertDate;
     }
 
     public double getDiscountAppliedToSalePrice() {
@@ -243,5 +246,26 @@ public class RequestDetails {
     public List<String> getBarcodeCodes() {
         return Arrays.asList(eanCode, dun14Code, alternativeEanCode1,
                 alternativeEanCode2, alternativeEanCode3, alternativeEanCode4);
+    }
+
+    public String getDictionaryKey() {
+        try {
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            // Key format: '#1000-02/02/2020 02:02:02#' - Used to have a single string key on the dictionary
+            String toFormat = "#" + this.getArticleCode() + "-" + df.format(this.getInsertDate()) + "#";
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(toFormat.getBytes("UTF-8"));
+            StringBuilder hexString = new StringBuilder();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if(hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

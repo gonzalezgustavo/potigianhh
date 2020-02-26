@@ -2,7 +2,6 @@ package com.example.potigianhh.fragments.adapters;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import com.example.potigianhh.model.RequestDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +26,7 @@ public class RequestDetailsAdapter extends RecyclerView.Adapter<RequestDetailsAd
     private MainActivity mainActivity;
 
     public RequestDetailsAdapter(MainActivity mainActivity, List<RequestDetails> requests,
-                                 SparseArray<String> currentValues) {
+                                 Map<String, String> currentValues) {
         if (requests == null)
             this.requests = new ArrayList<>();
         else
@@ -41,7 +41,7 @@ public class RequestDetailsAdapter extends RecyclerView.Adapter<RequestDetailsAd
             }
         } else {
             for (int i = 0; i < requests.size(); i++) {
-                values[i] = currentValues.get(requests.get(i).getArticleCode());
+                values[i] = currentValues.getOrDefault(requests.get(i).getDictionaryKey(), "0");
             }
         }
     }
@@ -72,6 +72,10 @@ public class RequestDetailsAdapter extends RecyclerView.Adapter<RequestDetailsAd
 
     public RequestDetails getItemAt(int position) {
         return requests.get(position);
+    }
+
+    public List<RequestDetails> getItems() {
+        return requests;
     }
 
     public void clearMainActivityReference() {

@@ -3,21 +3,21 @@ package com.example.potigianhh.model;
 import java.util.Map;
 
 public class CloseRequestPayload {
-    private Map<Integer, Integer> articleCount;
+    private Map<String, Integer> articleCount;
     private int printer;
     private int bags;
 
-    public CloseRequestPayload(Map<Integer, Integer> articleCount, int printer, int bags) {
+    public CloseRequestPayload(Map<String, Integer> articleCount, int printer, int bags) {
         this.articleCount = articleCount;
         this.printer = printer;
         this.bags = bags;
     }
 
-    public Map<Integer, Integer> getArticleCount() {
+    public Map<String, Integer> getArticleCount() {
         return articleCount;
     }
 
-    public void setArticleCount(Map<Integer, Integer> articleCount) {
+    public void setArticleCount(Map<String, Integer> articleCount) {
         this.articleCount = articleCount;
     }
 

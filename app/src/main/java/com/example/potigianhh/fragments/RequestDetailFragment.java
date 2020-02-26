@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +17,14 @@ import com.example.potigianhh.fragments.adapters.RequestDetailsAdapter;
 import com.example.potigianhh.fragments.decorators.RequestMarginDecorator;
 import com.example.potigianhh.model.RequestDetails;
 import com.example.potigianhh.model.RequestHeader;
-import com.example.potigianhh.utils.AudioPlayer;
 import com.example.potigianhh.utils.Constants;
 import com.google.common.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -53,7 +54,7 @@ public class RequestDetailFragment extends BaseFragment {
                 RequestHeader.class,
                 new TypeToken<RequestHeader>(){}.getType());
 
-        SparseArray<String> requestActuals = new SparseArray<>();
+        Map<String, String> requestActuals = new HashMap<>();
         if (adapter != null && adapter.getItemCount() > 0) {
 
             for (int i = 0; i < adapter.getItemCount(); i++) {
@@ -61,7 +62,7 @@ public class RequestDetailFragment extends BaseFragment {
                 String value = adapter.getValueAt(i);
                 if ("".equals(value))
                     value = "0";
-                requestActuals.put(details.getArticleCode(), value);
+                requestActuals.put(details.getDictionaryKey(), value);
             }
 
             getMainActivity().set(
@@ -82,53 +83,57 @@ public class RequestDetailFragment extends BaseFragment {
         boolean isHalfSelected = ((CheckBox)getView().findViewById(R.id.requestdetail_product_checkbox)).isChecked();
 
         if (adapter != null) {
-            boolean matchedItem = false;
+            List<RequestDetails> matchingItems = adapter.getItems()
+                    .stream()
+                    .filter(r -> r.getBarcodeCodes()
+                                .stream()
+                                .map(String::trim)
+                                .filter(s -> s.length() > 0)
+                                .anyMatch(s -> s.equals(content) || s.substring(0, s.length() - 1).equals(content)))
+                    .collect(Collectors.toList());
 
-            for (int i = 0; i < adapter.getItemCount(); i++) {
-                RequestDetails request = adapter.getItemAt(i);
-                // To make sure it matches, we simply validate, not only the value, but also the
-                // value removing one character
-                if (request.getBarcodeCodes()
-                        .stream()
-                        .map(String::trim)
-                        .filter(s -> s.length() > 0)
-                        .anyMatch(s -> s.equals(content) || s.substring(0, s.length() - 1).equals(content)))
-                {
-                    String currentValue = adapter.getValueAt(i);
-                    int multiplier = getMainActivity().getMultiplierValue(request.getArticleCode());
-
-                    if ("".equals(currentValue))
-                        currentValue = "0";
-
-                    int toAdd = (multiplier * (int) request.getSaleFactor());
-                    if (isHalfSelected)
-                        toAdd /= 2;
-
-                    String newValue = Integer.toString(Integer.parseInt(currentValue) + toAdd);
-                    adapter.setValueAt(i, newValue);
-
-                    RequestDetailsAdapter.ViewHolder holder =
-                            (RequestDetailsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
-                    if (holder != null) {
-                        new Handler(Looper.getMainLooper()).post(() -> holder.updateActualValue(newValue));
-                    }
-
-                    final int index = i;
-                    getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(index));
-
-                    matchedItem = true;
-
-                    if (Integer.parseInt(newValue) > request.getPackagesGrams())
-                        getMainActivity().playSound(R.raw.nok);
-                    else
-                        getMainActivity().playSound(R.raw.ok);
-
-                    break;
-                }
+            if (matchingItems.size() == 0) {
+                getMainActivity().playSound(R.raw.nok);
+                return;
             }
 
-            if (!matchedItem)
-                getMainActivity().playSound(R.raw.nok);
+            for (int i = 0; i < matchingItems.size(); i++) {
+                RequestDetails request = matchingItems.get(i);
+                String currentValue = adapter.getValueAt(i);
+                int multiplier = getMainActivity().getMultiplierValue(request.getArticleCode());
+
+                if ("".equals(currentValue))
+                    currentValue = "0";
+
+                int toAdd = (multiplier * (int) request.getSaleFactor());
+                if (isHalfSelected)
+                    toAdd /= 2;
+
+                String newValue = Integer.toString(Integer.parseInt(currentValue) + toAdd);
+
+                // go to next entry
+                if (matchingItems.size() != i + 1 && Integer.parseInt(newValue) > request.getPackagesGrams()) {
+                    continue;
+                }
+
+                adapter.setValueAt(i, newValue);
+
+                RequestDetailsAdapter.ViewHolder holder =
+                        (RequestDetailsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null) {
+                    new Handler(Looper.getMainLooper()).post(() -> holder.updateActualValue(newValue));
+                }
+
+                final int index = i;
+                getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(index));
+
+                if (Integer.parseInt(newValue) > request.getPackagesGrams())
+                    getMainActivity().playSound(R.raw.nok);
+                else
+                    getMainActivity().playSound(R.raw.ok);
+
+                break;
+            }
         }
     }
 
@@ -216,13 +221,13 @@ public class RequestDetailFragment extends BaseFragment {
                 RequestHeader.class,
                 new TypeToken<RequestHeader>(){}.getType());
 
-        SparseArray<String> storedValues = getMainActivity().get(
+        HashMap<String, String> storedValues = getMainActivity().get(
                 Constants.COUNT_REQUEST_KEY
                         .replace("{prefixDoc}", request.getDocumentPrefix().toString())
                         .replace("{document}", request.getDocumentCode().toString())
                         .replace("{suffixDoc}", request.getDocumentSuffix().toString()),
-                SparseArray.class,
-                new TypeToken<SparseArray<String>>(){}.getType());
+                HashMap.class,
+                new TypeToken<HashMap<String, String>>(){}.getType());
 
         RecyclerView recyclerView = getView().findViewById(R.id.requestdetail_product_list);
         recyclerView.setAdapter(new RequestDetailsAdapter(getMainActivity(), requestDetails, storedValues));

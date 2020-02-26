@@ -1,7 +1,6 @@
 package com.example.potigianhh.fragments.adapters;
 
 import android.graphics.Color;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import com.example.potigianhh.model.RequestDetails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +24,7 @@ public class RequestValidationAdapter extends RecyclerView.Adapter<RequestValida
     private MainActivity mainActivity;
 
     public RequestValidationAdapter(MainActivity mainActivity, List<RequestDetails> requests,
-                                 SparseArray<String> currentValues) {
+                                 Map<String, String> currentValues) {
         if (requests == null)
             this.requests = new ArrayList<>();
         else
@@ -39,7 +39,7 @@ public class RequestValidationAdapter extends RecyclerView.Adapter<RequestValida
             }
         } else {
             for (int i = 0; i < requests.size(); i++) {
-                values[i] = currentValues.get(requests.get(i).getArticleCode());
+                values[i] = currentValues.getOrDefault(requests.get(i).getDictionaryKey(), "0");
             }
         }
     }
