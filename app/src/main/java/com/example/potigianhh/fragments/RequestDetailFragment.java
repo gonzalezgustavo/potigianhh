@@ -112,7 +112,7 @@ public class RequestDetailFragment extends BaseFragment {
                 String newValue = Integer.toString(Integer.parseInt(currentValue) + toAdd);
 
                 // go to next entry
-                if (request == matchingItems.get(matchingItems.size() - 2) && Integer.parseInt(newValue) > request.getPackagesGrams()) {
+                if (matchingItems.indexOf(request) < (matchingItems.size() - 1) && Integer.parseInt(newValue) > request.getPackagesGrams()) {
                     continue;
                 }
 

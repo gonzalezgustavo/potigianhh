@@ -251,8 +251,8 @@ public class RequestDetails {
     public String getDictionaryKey() {
         try {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            // Key format: '#1000-02/02/2020 02:02:02#' - Used to have a single string key on the dictionary
-            String toFormat = "#" + this.getArticleCode() + "-" + df.format(this.getInsertDate()) + "#";
+            // Key format: '#1000-02/02/2020 02:02:02-1#' - Used to have a single string key on the dictionary
+            String toFormat = "#" + this.getArticleCode() + "-" + df.format(this.getInsertDate()) + "-" + this.getRequestItem() + "#";
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(toFormat.getBytes("UTF-8"));
             StringBuilder hexString = new StringBuilder();
