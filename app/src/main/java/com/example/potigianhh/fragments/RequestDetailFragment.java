@@ -97,8 +97,8 @@ public class RequestDetailFragment extends BaseFragment {
                 return;
             }
 
-            for (int i = 0; i < matchingItems.size(); i++) {
-                RequestDetails request = matchingItems.get(i);
+            for (RequestDetails request : matchingItems) {
+                final int i = adapter.getItems().indexOf(request);
                 String currentValue = adapter.getValueAt(i);
                 int multiplier = getMainActivity().getMultiplierValue(request.getArticleCode());
 
@@ -112,7 +112,7 @@ public class RequestDetailFragment extends BaseFragment {
                 String newValue = Integer.toString(Integer.parseInt(currentValue) + toAdd);
 
                 // go to next entry
-                if (matchingItems.size() != i + 1 && Integer.parseInt(newValue) > request.getPackagesGrams()) {
+                if (request == matchingItems.get(matchingItems.size() - 2) && Integer.parseInt(newValue) > request.getPackagesGrams()) {
                     continue;
                 }
 
@@ -124,8 +124,7 @@ public class RequestDetailFragment extends BaseFragment {
                     new Handler(Looper.getMainLooper()).post(() -> holder.updateActualValue(newValue));
                 }
 
-                final int index = i;
-                getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(index));
+                getMainActivity().runOnUiThread(() -> adapter.notifyItemChanged(i));
 
                 if (Integer.parseInt(newValue) > request.getPackagesGrams())
                     getMainActivity().playSound(R.raw.nok);

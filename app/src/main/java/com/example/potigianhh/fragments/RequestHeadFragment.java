@@ -1,5 +1,6 @@
 package com.example.potigianhh.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -29,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 public class RequestHeadFragment extends BaseFragment {
+    private AlertDialog dataInputDialog;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,12 +108,13 @@ public class RequestHeadFragment extends BaseFragment {
                     try { delivery = Integer.parseInt(deliveryText.getText().toString()); } catch (Exception e) {}
                     if (suffix == 0 && delivery == 0) {
                         displayErrorDialog("Datos inválidos", "Debes ingresar número de sufijo o reparto");
+                        dataInputDialog = null;
                         return;
                     }
                     showAlertDialog(cigarettesOnly, suffix, delivery);
                 })
                 .setNegativeButton("Cancelar", (dialog, which) -> {});
-        builder.show();
+        dataInputDialog = builder.show();
     }
 
     private AlertDialog showAlertDialog(boolean cigarettesOnly, int suffix, int delivery) {
@@ -133,6 +137,7 @@ public class RequestHeadFragment extends BaseFragment {
                             .replace("{deliveryNumber}", Integer.toString(delivery));
                     doListRequest(Request.Method.POST, url, RequestHeader.class, null,
                             RequestHeadFragment.this::onDataReceived, null);
+                    dataInputDialog = null;
                 })
                 .setNegativeButton("No", (dialog, which) -> {})
                 .show();
@@ -181,6 +186,18 @@ public class RequestHeadFragment extends BaseFragment {
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onBarcode(String content) {
+        if (dataInputDialog != null) {
+            EditText editText = dataInputDialog.findViewById(R.id.preparing_suffix_text);
+            getMainActivity().runOnUiThread(() -> {
+                editText.setText(content.trim());
+                dataInputDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+                getMainActivity().playSound(R.raw.ok);
+            });
         }
     }
 }
